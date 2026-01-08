@@ -1,42 +1,10 @@
 import { Facebook, Twitter, Linkedin, Github } from "lucide-react";
 import { Link } from "react-router-dom";
-
-const teamMembers = [
-  {
-    id: 1,
-    name: "আহমেদ হাসান",
-    role: "ফুলস্ট্যাক ডেভেলপার",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=face",
-    skills: ["React", "Node.js", "MongoDB"],
-    projectCount: 45,
-  },
-  {
-    id: 2,
-    name: "ফাতেমা আক্তার",
-    role: "UI/UX ডিজাইনার",
-    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=300&h=300&fit=crop&crop=face",
-    skills: ["Figma", "Adobe XD", "Sketch"],
-    projectCount: 38,
-  },
-  {
-    id: 3,
-    name: "করিম উদ্দিন",
-    role: "মোবাইল ডেভেলপার",
-    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300&h=300&fit=crop&crop=face",
-    skills: ["Flutter", "React Native", "Swift"],
-    projectCount: 32,
-  },
-  {
-    id: 4,
-    name: "সাবরিনা ইসলাম",
-    role: "ডিজিটাল মার্কেটার",
-    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=300&h=300&fit=crop&crop=face",
-    skills: ["SEO", "Google Ads", "Social Media"],
-    projectCount: 28,
-  },
-];
+import { useTeamMembers } from "@/hooks/useTeamMembers";
 
 const TeamSection = () => {
+  const { data: teamMembers } = useTeamMembers();
+
   return (
     <section className="section-padding bg-background">
       <div className="container-custom">
@@ -54,63 +22,70 @@ const TeamSection = () => {
         </div>
 
         {/* Team Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {teamMembers.map((member) => (
-            <div
-              key={member.id}
-              className="group bg-card rounded-2xl overflow-hidden card-elevated text-center"
-            >
-              {/* Image */}
-              <div className="relative h-64 overflow-hidden">
-                <img
-                  src={member.image}
-                  alt={member.name}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                />
-                <div className="absolute inset-0 hero-gradient/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-3">
-                  <a href="#" className="w-9 h-9 bg-primary-foreground rounded-full flex items-center justify-center transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 delay-100">
-                    <Facebook size={16} className="text-primary" />
-                  </a>
-                  <a href="#" className="w-9 h-9 bg-primary-foreground rounded-full flex items-center justify-center transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 delay-150">
-                    <Twitter size={16} className="text-primary" />
-                  </a>
-                  <a href="#" className="w-9 h-9 bg-primary-foreground rounded-full flex items-center justify-center transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 delay-200">
-                    <Linkedin size={16} className="text-primary" />
-                  </a>
-                  <a href="#" className="w-9 h-9 bg-primary-foreground rounded-full flex items-center justify-center transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 delay-250">
-                    <Github size={16} className="text-primary" />
-                  </a>
+        {!teamMembers || teamMembers.length === 0 ? (
+          <div className="text-center py-12 text-muted-foreground">
+            কোনো টিম মেম্বার পাওয়া যায়নি। অ্যাডমিন প্যানেল থেকে টিম মেম্বার যোগ করুন।
+          </div>
+        ) : (
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {teamMembers.slice(0, 4).map((member) => (
+              <div
+                key={member.id}
+                className="group bg-card rounded-2xl overflow-hidden card-elevated text-center"
+              >
+                {/* Image */}
+                <div className="relative h-64 overflow-hidden">
+                  <img
+                    src={member.image_url || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=face"}
+                    alt={member.name}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 hero-gradient/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-3">
+                    {member.facebook && (
+                      <a href={member.facebook} target="_blank" rel="noopener noreferrer" className="w-9 h-9 bg-primary-foreground rounded-full flex items-center justify-center transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 delay-100">
+                        <Facebook size={16} className="text-primary" />
+                      </a>
+                    )}
+                    {member.linkedin && (
+                      <a href={member.linkedin} target="_blank" rel="noopener noreferrer" className="w-9 h-9 bg-primary-foreground rounded-full flex items-center justify-center transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 delay-150">
+                        <Linkedin size={16} className="text-primary" />
+                      </a>
+                    )}
+                    {member.github && (
+                      <a href={member.github} target="_blank" rel="noopener noreferrer" className="w-9 h-9 bg-primary-foreground rounded-full flex items-center justify-center transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 delay-200">
+                        <Github size={16} className="text-primary" />
+                      </a>
+                    )}
+                  </div>
+                </div>
+
+                {/* Content */}
+                <div className="p-6">
+                  <h3 className="text-lg font-semibold text-foreground mb-1">
+                    {member.name}
+                  </h3>
+                  <p className="text-secondary font-medium text-sm mb-4">
+                    {member.designation}
+                  </p>
+
+                  {/* Skills */}
+                  {member.skills && member.skills.length > 0 && (
+                    <div className="flex flex-wrap justify-center gap-2">
+                      {member.skills.slice(0, 3).map((skill, idx) => (
+                        <span
+                          key={idx}
+                          className="text-xs bg-muted text-muted-foreground px-2 py-1 rounded-md"
+                        >
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
-
-              {/* Content */}
-              <div className="p-6">
-                <h3 className="text-lg font-semibold text-foreground mb-1">
-                  {member.name}
-                </h3>
-                <p className="text-secondary font-medium text-sm mb-4">
-                  {member.role}
-                </p>
-
-                {/* Skills */}
-                <div className="flex flex-wrap justify-center gap-2 mb-4">
-                  {member.skills.map((skill, idx) => (
-                    <span
-                      key={idx}
-                      className="text-xs bg-muted text-muted-foreground px-2 py-1 rounded-md"
-                    >
-                      {skill}
-                    </span>
-                  ))}
-                </div>
-
-                <div className="text-sm text-muted-foreground">
-                  <span className="font-semibold text-foreground">{member.projectCount}</span> প্রজেক্ট সম্পন্ন
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
 
         {/* View All */}
         <div className="text-center mt-12">

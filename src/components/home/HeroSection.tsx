@@ -1,8 +1,11 @@
 import { ArrowRight, Play } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { useSiteSettings } from "@/hooks/useSiteSettings";
 
 const HeroSection = () => {
+  const { data: settings } = useSiteSettings();
+
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden">
       {/* Background Pattern */}
@@ -30,31 +33,30 @@ const HeroSection = () => {
           <div className="space-y-8 animate-slide-up">
             <div className="inline-flex items-center gap-2 bg-primary-foreground/10 backdrop-blur-sm rounded-full px-4 py-2 text-primary-foreground/90 text-sm">
               <span className="w-2 h-2 bg-secondary rounded-full animate-pulse" />
-              বাংলাদেশের সেরা ফ্রিল্যান্স টিম
+              {(settings?.hero_badge as string) || "বাংলাদেশের সেরা ফ্রিল্যান্স টিম"}
             </div>
 
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-primary-foreground leading-tight">
-              আপনার স্বপ্নের
+              {(settings?.hero_title_line1 as string) || "আপনার স্বপ্নের"}
               <br />
-              <span className="text-secondary">প্রজেক্ট</span> বাস্তবায়ন করুন
+              <span className="text-secondary">{(settings?.hero_title_line2 as string) || "প্রজেক্ট বাস্তবায়ন করুন"}</span>
             </h1>
 
             <p className="text-lg md:text-xl text-primary-foreground/80 max-w-xl leading-relaxed">
-              আমরা ওয়েব ডেভেলপমেন্ট, গ্রাফিক ডিজাইন, UI/UX এবং ডিজিটাল মার্কেটিং-এ 
-              বিশ্বমানের সেবা প্রদান করি। আপনার ব্যবসার জন্য সঠিক সমাধান খুঁজে পান।
+              {(settings?.hero_description as string) || "আমরা ওয়েব ডেভেলপমেন্ট, গ্রাফিক ডিজাইন, UI/UX এবং ডিজিটাল মার্কেটিং-এ বিশ্বমানের সেবা প্রদান করি। আপনার ব্যবসার জন্য সঠিক সমাধান খুঁজে পান।"}
             </p>
 
             <div className="flex flex-wrap gap-4">
               <Link to="/contact">
                 <Button className="btn-secondary text-base px-8 py-6 group">
-                  এখনই শুরু করুন
+                  {(settings?.hero_cta_primary as string) || "এখনই শুরু করুন"}
                   <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={20} />
                 </Button>
               </Link>
               <Link to="/projects">
                 <Button variant="outline" className="border-2 border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10 px-8 py-6 text-base">
                   <Play className="mr-2" size={20} />
-                  আমাদের কাজ দেখুন
+                  {(settings?.hero_cta_secondary as string) || "আমাদের কাজ দেখুন"}
                 </Button>
               </Link>
             </div>
@@ -62,16 +64,28 @@ const HeroSection = () => {
             {/* Stats */}
             <div className="flex flex-wrap gap-8 pt-8 border-t border-primary-foreground/20">
               <div>
-                <div className="text-3xl md:text-4xl font-bold text-secondary">১৫০+</div>
-                <div className="text-primary-foreground/70 text-sm">সম্পন্ন প্রজেক্ট</div>
+                <div className="text-3xl md:text-4xl font-bold text-secondary">
+                  {(settings?.hero_stat1_number as string) || "১৫০+"}
+                </div>
+                <div className="text-primary-foreground/70 text-sm">
+                  {(settings?.hero_stat1_label as string) || "সম্পন্ন প্রজেক্ট"}
+                </div>
               </div>
               <div>
-                <div className="text-3xl md:text-4xl font-bold text-secondary">৫০+</div>
-                <div className="text-primary-foreground/70 text-sm">সন্তুষ্ট ক্লায়েন্ট</div>
+                <div className="text-3xl md:text-4xl font-bold text-secondary">
+                  {(settings?.hero_stat2_number as string) || "৫০+"}
+                </div>
+                <div className="text-primary-foreground/70 text-sm">
+                  {(settings?.hero_stat2_label as string) || "সন্তুষ্ট ক্লায়েন্ট"}
+                </div>
               </div>
               <div>
-                <div className="text-3xl md:text-4xl font-bold text-secondary">৫+</div>
-                <div className="text-primary-foreground/70 text-sm">বছরের অভিজ্ঞতা</div>
+                <div className="text-3xl md:text-4xl font-bold text-secondary">
+                  {(settings?.hero_stat3_number as string) || "৫+"}
+                </div>
+                <div className="text-primary-foreground/70 text-sm">
+                  {(settings?.hero_stat3_label as string) || "বছরের অভিজ্ঞতা"}
+                </div>
               </div>
             </div>
           </div>

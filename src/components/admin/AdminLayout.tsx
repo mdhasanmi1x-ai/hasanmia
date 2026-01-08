@@ -24,7 +24,7 @@ const menuItems = [
   { icon: FolderKanban, label: 'প্রজেক্টস', path: '/admin/projects' },
   { icon: Users, label: 'টিম মেম্বার', path: '/admin/team' },
   { icon: Briefcase, label: 'সার্ভিস', path: '/admin/services' },
-  { icon: Settings, label: 'সাইট সেটিংস', path: '/admin/settings' },
+  { icon: Settings, label: 'সাইট সেটিংস', path: '/admin/site-settings' },
 ];
 
 const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {

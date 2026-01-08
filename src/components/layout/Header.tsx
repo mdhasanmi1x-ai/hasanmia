@@ -48,25 +48,22 @@ const Header = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center gap-8">
-            {navLinks.map((link) => (
-              <Link
-                key={link.path}
-                to={link.path}
-                className={`text-sm font-medium transition-colors duration-200 relative group ${
-                  isActive(link.path)
-                    ? "text-primary"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                {link.name}
-                <span
-                  className={`absolute -bottom-1 left-0 h-0.5 gold-gradient transition-all duration-300 ${
-                    isActive(link.path) ? "w-full" : "w-0 group-hover:w-full"
+          <div className="hidden lg:flex items-center">
+            <div className="flex items-center gap-1 bg-yellow-500 rounded-full px-2 py-1">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.path}
+                  to={link.path}
+                  className={`text-sm font-medium transition-colors duration-200 px-4 py-2 rounded-full ${
+                    isActive(link.path)
+                      ? "bg-black text-white"
+                      : "text-black hover:bg-yellow-400"
                   }`}
-                />
-              </Link>
-            ))}
+                >
+                  {link.name}
+                </Link>
+              ))}
+            </div>
           </div>
 
           {/* CTA Button */}

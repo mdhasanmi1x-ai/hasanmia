@@ -86,24 +86,24 @@ const Header = () => {
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="lg:hidden absolute top-full left-0 right-0 bg-card/98 backdrop-blur-lg shadow-xl animate-slide-up">
-            <div className="container-custom py-6 flex flex-col gap-4">
-              {navLinks.map((link, index) => (
+          <div className="lg:hidden absolute top-full left-0 right-0 bg-yellow-500 shadow-xl animate-slide-up">
+            <div className="container-custom py-4 flex flex-col gap-2">
+              {navLinks.map((link) => (
                 <Link
                   key={link.path}
                   to={link.path}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className={`text-lg font-medium py-2 border-b border-border/50 transition-colors animate-slide-up stagger-${index + 1} ${
+                  className={`text-lg font-medium py-3 px-4 rounded-full transition-colors ${
                     isActive(link.path)
-                      ? "text-primary"
-                      : "text-muted-foreground"
+                      ? "bg-black text-white"
+                      : "text-black hover:bg-yellow-400"
                   }`}
                 >
                   {link.name}
                 </Link>
               ))}
               <Link to="/contact" onClick={() => setIsMobileMenuOpen(false)}>
-                <Button className="btn-secondary w-full mt-4">
+                <Button className="w-full mt-4 bg-black text-white hover:bg-gray-800">
                   প্রজেক্ট শুরু করুন
                 </Button>
               </Link>

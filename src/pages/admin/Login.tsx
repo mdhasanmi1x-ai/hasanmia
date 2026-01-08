@@ -6,14 +6,16 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { Eye, EyeOff, Lock, Mail, Briefcase } from 'lucide-react';
+import { Eye, EyeOff, Lock, Mail, Briefcase, User } from 'lucide-react';
 
 const AdminLogin = () => {
+  const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [fullName, setFullName] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { signIn } = useAuth();
+  const { signIn, signUp } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -22,20 +24,37 @@ const AdminLogin = () => {
     setIsLoading(true);
 
     try {
-      const { error } = await signIn(email, password);
-      
-      if (error) {
-        toast({
-          title: "লগইন ব্যর্থ",
-          description: "ইমেইল অথবা পাসওয়ার্ড ভুল হয়েছে",
-          variant: "destructive"
-        });
+      if (isSignUp) {
+        const { error } = await signUp(email, password, fullName);
+        if (error) {
+          toast({
+            title: "সাইন আপ ব্যর্থ",
+            description: error.message || "কিছু সমস্যা হয়েছে",
+            variant: "destructive"
+          });
+        } else {
+          toast({
+            title: "সফল!",
+            description: "অ্যাকাউন্ট তৈরি হয়েছে। এখন লগইন করুন।"
+          });
+          setIsSignUp(false);
+          setPassword('');
+        }
       } else {
-        toast({
-          title: "স্বাগতম!",
-          description: "সফলভাবে লগইন হয়েছে"
-        });
-        navigate('/admin/dashboard');
+        const { error } = await signIn(email, password);
+        if (error) {
+          toast({
+            title: "লগইন ব্যর্থ",
+            description: "ইমেইল অথবা পাসওয়ার্ড ভুল হয়েছে",
+            variant: "destructive"
+          });
+        } else {
+          toast({
+            title: "স্বাগতম!",
+            description: "সফলভাবে লগইন হয়েছে"
+          });
+          navigate('/admin/dashboard');
+        }
       }
     } catch (error) {
       toast({
@@ -62,13 +81,33 @@ const AdminLogin = () => {
 
         <Card className="border-0 shadow-xl">
           <CardHeader className="space-y-1 pb-4">
-            <CardTitle className="text-xl text-center">লগইন করুন</CardTitle>
+            <CardTitle className="text-xl text-center">
+              {isSignUp ? 'অ্যাকাউন্ট তৈরি করুন' : 'লগইন করুন'}
+            </CardTitle>
             <CardDescription className="text-center">
-              আপনার অ্যাকাউন্টে প্রবেশ করতে তথ্য দিন
+              {isSignUp ? 'নতুন অ্যাকাউন্ট তৈরি করতে তথ্য দিন' : 'আপনার অ্যাকাউন্টে প্রবেশ করতে তথ্য দিন'}
             </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
+              {isSignUp && (
+                <div className="space-y-2">
+                  <Label htmlFor="fullName">পুরো নাম</Label>
+                  <div className="relative">
+                    <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                    <Input
+                      id="fullName"
+                      type="text"
+                      placeholder="আপনার নাম"
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
+                      className="pl-10"
+                      required={isSignUp}
+                    />
+                  </div>
+                </div>
+              )}
+
               <div className="space-y-2">
                 <Label htmlFor="email">ইমেইল</Label>
                 <div className="relative">
@@ -97,6 +136,7 @@ const AdminLogin = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     className="pl-10 pr-10"
                     required
+                    minLength={6}
                   />
                   <button
                     type="button"
@@ -113,9 +153,22 @@ const AdminLogin = () => {
                 className="w-full"
                 disabled={isLoading}
               >
-                {isLoading ? 'লগইন হচ্ছে...' : 'লগইন করুন'}
+                {isLoading ? (isSignUp ? 'তৈরি হচ্ছে...' : 'লগইন হচ্ছে...') : (isSignUp ? 'অ্যাকাউন্ট তৈরি করুন' : 'লগইন করুন')}
               </Button>
             </form>
+
+            <div className="mt-4 text-center">
+              <button
+                type="button"
+                onClick={() => {
+                  setIsSignUp(!isSignUp);
+                  setPassword('');
+                }}
+                className="text-sm text-primary hover:underline"
+              >
+                {isSignUp ? 'ইতিমধ্যে অ্যাকাউন্ট আছে? লগইন করুন' : 'অ্যাকাউন্ট নেই? সাইন আপ করুন'}
+              </button>
+            </div>
           </CardContent>
         </Card>
 

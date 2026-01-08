@@ -1,12 +1,6 @@
 import Layout from "@/components/layout/Layout";
 import { CheckCircle, Users, Target, Award } from "lucide-react";
-
-const stats = [
-  { number: "৫+", label: "বছরের অভিজ্ঞতা" },
-  { number: "১৫০+", label: "সম্পন্ন প্রজেক্ট" },
-  { number: "৫০+", label: "সন্তুষ্ট ক্লায়েন্ট" },
-  { number: "১০+", label: "টিম মেম্বার" },
-];
+import { useSiteSettings } from "@/hooks/useSiteSettings";
 
 const values = [
   {
@@ -27,6 +21,45 @@ const values = [
 ];
 
 const About = () => {
+  const { data: settings, isLoading } = useSiteSettings();
+
+  // Get about page content from settings
+  const title = settings?.about_title as string || "আমাদের সম্পর্কে";
+  const subtitle = settings?.about_subtitle as string || "আমরা ফ্রিল্যান্সহাব";
+  const description = settings?.about_description as string || "বাংলাদেশের একটি শীর্ষস্থানীয় ফ্রিল্যান্সার টিম যারা ওয়েব ডেভেলপমেন্ট, গ্রাফিক ডিজাইন এবং ডিজিটাল মার্কেটিং-এ বিশ্বমানের সেবা প্রদান করে।";
+  const storyTitle = settings?.about_story_title as string || "আমাদের গল্প";
+  const storyDescription1 = settings?.about_story_description1 as string || "";
+  const storyDescription2 = settings?.about_story_description2 as string || "";
+  const imageUrl = settings?.about_image_url as string || "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600&h=600&fit=crop";
+  
+  // Parse features - can be stored as JSON array in settings
+  let features: string[] = [];
+  if (settings?.about_features) {
+    if (Array.isArray(settings.about_features)) {
+      features = settings.about_features as string[];
+    } else if (typeof settings.about_features === 'string') {
+      try {
+        features = JSON.parse(settings.about_features as string);
+      } catch {
+        features = (settings.about_features as string).split(',').map(f => f.trim());
+      }
+    }
+  }
+
+  // Get stats from hero settings
+  const stat1Number = settings?.hero_stat1_number as string || "";
+  const stat1Label = settings?.hero_stat1_label as string || "";
+  const stat2Number = settings?.hero_stat2_number as string || "";
+  const stat2Label = settings?.hero_stat2_label as string || "";
+  const stat3Number = settings?.hero_stat3_number as string || "";
+  const stat3Label = settings?.hero_stat3_label as string || "";
+
+  const stats = [
+    { number: stat1Number, label: stat1Label },
+    { number: stat2Number, label: stat2Label },
+    { number: stat3Number, label: stat3Label },
+  ].filter(s => s.number && s.label);
+
   return (
     <Layout>
       {/* Hero Section */}
@@ -37,34 +70,35 @@ const About = () => {
         <div className="container-custom relative z-10">
           <div className="max-w-3xl">
             <span className="inline-block text-secondary font-semibold text-sm uppercase tracking-wider mb-4">
-              আমাদের সম্পর্কে
+              {title}
             </span>
             <h1 className="text-4xl md:text-5xl font-bold text-primary-foreground mb-6">
-              আমরা <span className="text-secondary">ফ্রিল্যান্সহাব</span>
+              {subtitle}
             </h1>
             <p className="text-lg text-primary-foreground/80 leading-relaxed">
-              বাংলাদেশের একটি শীর্ষস্থানীয় ফ্রিল্যান্সার টিম যারা ওয়েব ডেভেলপমেন্ট, 
-              গ্রাফিক ডিজাইন এবং ডিজিটাল মার্কেটিং-এ বিশ্বমানের সেবা প্রদান করে।
+              {description}
             </p>
           </div>
         </div>
       </section>
 
       {/* Stats */}
-      <section className="py-12 bg-card border-b border-border">
-        <div className="container-custom">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {stats.map((stat, index) => (
-              <div key={index} className="text-center">
-                <div className="text-4xl md:text-5xl font-bold gold-text mb-2">
-                  {stat.number}
+      {stats.length > 0 && (
+        <section className="py-12 bg-card border-b border-border">
+          <div className="container-custom">
+            <div className={`grid grid-cols-${Math.min(stats.length, 4)} gap-8`}>
+              {stats.map((stat, index) => (
+                <div key={index} className="text-center">
+                  <div className="text-4xl md:text-5xl font-bold gold-text mb-2">
+                    {stat.number}
+                  </div>
+                  <div className="text-muted-foreground">{stat.label}</div>
                 </div>
-                <div className="text-muted-foreground">{stat.label}</div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Story Section */}
       <section className="section-padding">
@@ -72,47 +106,49 @@ const About = () => {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
               <span className="inline-block text-secondary font-semibold text-sm uppercase tracking-wider mb-4">
-                আমাদের গল্প
+                {storyTitle || "আমাদের গল্প"}
               </span>
               <h2 className="heading-secondary mb-6">
-                ২০১৯ থেকে আমরা <span className="gold-text">স্বপ্ন</span> বাস্তবায়ন করছি
+                আমাদের <span className="gold-text">যাত্রা</span>
               </h2>
-              <p className="text-body mb-6">
-                ফ্রিল্যান্সহাব শুরু হয়েছিল কয়েকজন উৎসাহী তরুণ ফ্রিল্যান্সারের হাত ধরে। 
-                আমরা বিশ্বাস করি যে বাংলাদেশের প্রতিভাবান তরুণরা বিশ্বমানের কাজ করতে সক্ষম।
-              </p>
-              <p className="text-body mb-6">
-                আজ আমরা একটি পূর্ণাঙ্গ টিম হিসেবে দেশ-বিদেশের বিভিন্ন ক্লায়েন্টদের সেবা দিচ্ছি। 
-                আমাদের লক্ষ্য হলো বাংলাদেশকে আইটি সেক্টরে বিশ্বের মানচিত্রে উজ্জ্বল করা।
-              </p>
-              <ul className="space-y-3">
-                {[
-                  "উচ্চমানের কাস্টম সলিউশন",
-                  "সাশ্রয়ী মূল্যে সেবা",
-                  "২৪/৭ সাপোর্ট",
-                  "দক্ষ ও অভিজ্ঞ টিম",
-                ].map((item, index) => (
-                  <li key={index} className="flex items-center gap-3">
-                    <CheckCircle className="text-secondary" size={20} />
-                    <span className="text-foreground">{item}</span>
-                  </li>
-                ))}
-              </ul>
+              {storyDescription1 ? (
+                <>
+                  <p className="text-body mb-6">{storyDescription1}</p>
+                  {storyDescription2 && <p className="text-body mb-6">{storyDescription2}</p>}
+                </>
+              ) : (
+                <p className="text-muted-foreground mb-6">
+                  আমাদের সম্পর্কে তথ্য এখনো যোগ করা হয়নি। অ্যাডমিন প্যানেল থেকে যোগ করুন।
+                </p>
+              )}
+              
+              {features.length > 0 && (
+                <ul className="space-y-3">
+                  {features.map((item, index) => (
+                    <li key={index} className="flex items-center gap-3">
+                      <CheckCircle className="text-secondary" size={20} />
+                      <span className="text-foreground">{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
             <div className="relative">
               <div className="aspect-square rounded-2xl overflow-hidden">
                 <img
-                  src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600&h=600&fit=crop"
+                  src={imageUrl}
                   alt="আমাদের টিম"
                   className="w-full h-full object-cover"
                 />
               </div>
-              <div className="absolute -bottom-6 -left-6 w-32 h-32 gold-gradient rounded-2xl flex items-center justify-center">
-                <div className="text-center text-secondary-foreground">
-                  <div className="text-3xl font-bold">৫+</div>
-                  <div className="text-sm">বছর</div>
+              {stat1Number && (
+                <div className="absolute -bottom-6 -left-6 w-32 h-32 gold-gradient rounded-2xl flex items-center justify-center">
+                  <div className="text-center text-secondary-foreground">
+                    <div className="text-3xl font-bold">{stat1Number}</div>
+                    <div className="text-sm">{stat1Label}</div>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
         </div>

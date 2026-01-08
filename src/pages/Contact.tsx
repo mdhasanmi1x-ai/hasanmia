@@ -5,32 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-
-const contactInfo = [
-  {
-    icon: MapPin,
-    title: "ঠিকানা",
-    details: ["গুলশান, ঢাকা-১২১২", "বাংলাদেশ"],
-  },
-  {
-    icon: Phone,
-    title: "ফোন",
-    details: ["+৮৮০ ১৭১২-৩৪৫৬৭৮", "+৮৮০ ১৮১৮-৭৮৯০১২"],
-  },
-  {
-    icon: Mail,
-    title: "ইমেইল",
-    details: ["info@freelancehub.com", "support@freelancehub.com"],
-  },
-  {
-    icon: Clock,
-    title: "অফিস সময়",
-    details: ["শনি - বৃহস্পতি: ১০:০০ - ১৯:০০", "শুক্রবার: বন্ধ"],
-  },
-];
+import { useSiteSettings } from "@/hooks/useSiteSettings";
 
 const Contact = () => {
   const { toast } = useToast();
+  const { data: settings } = useSiteSettings();
+  
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -68,6 +48,38 @@ const Contact = () => {
     });
     setIsSubmitting(false);
   };
+
+  // Get contact info from settings
+  const address = settings?.contact_address as string || "";
+  const phone = settings?.contact_phone as string || "";
+  const email = settings?.contact_email as string || "";
+
+  const contactInfo = [
+    {
+      icon: MapPin,
+      title: "ঠিকানা",
+      details: address ? [address] : [],
+      show: !!address,
+    },
+    {
+      icon: Phone,
+      title: "ফোন",
+      details: phone ? [phone] : [],
+      show: !!phone,
+    },
+    {
+      icon: Mail,
+      title: "ইমেইল",
+      details: email ? [email] : [],
+      show: !!email,
+    },
+    {
+      icon: Clock,
+      title: "অফিস সময়",
+      details: ["শনি - বৃহস্পতি: ১০:০০ - ১৯:০০", "শুক্রবার: বন্ধ"],
+      show: true,
+    },
+  ].filter(info => info.show);
 
   return (
     <Layout>
@@ -107,37 +119,45 @@ const Contact = () => {
                 </p>
               </div>
 
-              {contactInfo.map((info, index) => (
-                <div
-                  key={index}
-                  className="flex items-start gap-4 p-4 bg-card rounded-xl border border-border/50"
-                >
-                  <div className="w-12 h-12 hero-gradient rounded-lg flex items-center justify-center flex-shrink-0">
-                    <info.icon className="text-primary-foreground" size={22} />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-foreground mb-1">
-                      {info.title}
-                    </h3>
-                    {info.details.map((detail, idx) => (
-                      <p key={idx} className="text-muted-foreground text-sm">
-                        {detail}
-                      </p>
-                    ))}
-                  </div>
+              {contactInfo.length === 0 ? (
+                <div className="text-muted-foreground text-sm">
+                  যোগাযোগের তথ্য এখনো যোগ করা হয়নি।
                 </div>
-              ))}
+              ) : (
+                contactInfo.map((info, index) => (
+                  <div
+                    key={index}
+                    className="flex items-start gap-4 p-4 bg-card rounded-xl border border-border/50"
+                  >
+                    <div className="w-12 h-12 hero-gradient rounded-lg flex items-center justify-center flex-shrink-0">
+                      <info.icon className="text-primary-foreground" size={22} />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-foreground mb-1">
+                        {info.title}
+                      </h3>
+                      {info.details.map((detail, idx) => (
+                        <p key={idx} className="text-muted-foreground text-sm">
+                          {detail}
+                        </p>
+                      ))}
+                    </div>
+                  </div>
+                ))
+              )}
 
               {/* WhatsApp Button */}
-              <a
-                href="https://wa.me/8801712345678"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 w-full py-4 bg-green-500 hover:bg-green-600 text-white rounded-xl font-medium transition-colors"
-              >
-                <MessageCircle size={20} />
-                হোয়াটসঅ্যাপে মেসেজ করুন
-              </a>
+              {phone && (
+                <a
+                  href={`https://wa.me/${phone.replace(/[^0-9]/g, '')}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2 w-full py-4 bg-green-500 hover:bg-green-600 text-white rounded-xl font-medium transition-colors"
+                >
+                  <MessageCircle size={20} />
+                  হোয়াটসঅ্যাপে মেসেজ করুন
+                </a>
+              )}
             </div>
 
             {/* Contact Form */}
@@ -241,24 +261,6 @@ const Contact = () => {
                 </form>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Map Section */}
-      <section className="pb-20">
-        <div className="container-custom">
-          <div className="rounded-2xl overflow-hidden h-96 bg-muted">
-            <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3651.0063461287736!2d90.41493831498135!3d23.782363193836897!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755c7715a40c603%3A0xce6d57a6c4f7f4b5!2sGulshan%2C%20Dhaka!5e0!3m2!1sen!2sbd!4v1625000000000!5m2!1sen!2sbd"
-              width="100%"
-              height="100%"
-              style={{ border: 0 }}
-              allowFullScreen
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              title="অফিসের অবস্থান"
-            />
           </div>
         </div>
       </section>

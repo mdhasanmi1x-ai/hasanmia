@@ -54,7 +54,7 @@ const HeroSection = () => {
                 </Button>
               </Link>
               <Link to="/projects">
-                <Button variant="outline" className="border-2 border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10 px-8 py-6 text-base">
+                <Button className="bg-yellow-500 hover:bg-yellow-600 text-black px-8 py-6 text-base">
                   <Play className="mr-2" size={20} />
                   {(settings?.hero_cta_secondary as string) || "আমাদের কাজ দেখুন"}
                 </Button>

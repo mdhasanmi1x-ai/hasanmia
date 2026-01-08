@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import AdminLayout from "@/components/admin/AdminLayout";
+import ImageUpload from "@/components/admin/ImageUpload";
 import { useSiteSettings, useBulkUpdateSiteSettings } from "@/hooks/useSiteSettings";
 import { toast } from "sonner";
 
@@ -58,6 +59,7 @@ const SiteSettingsManagement = () => {
     about_story_title: "",
     about_story_description1: "",
     about_story_description2: "",
+    about_image_url: "",
   });
 
   useEffect(() => {
@@ -372,29 +374,44 @@ const SiteSettingsManagement = () => {
                     rows={3}
                   />
                 </div>
-                <div>
-                  <Label>গল্পের টাইটেল</Label>
-                  <Input
-                    value={formData.about_story_title}
-                    onChange={(e) => handleChange("about_story_title", e.target.value)}
-                    placeholder="২০১৯ থেকে আমরা স্বপ্ন বাস্তবায়ন করছি"
-                  />
-                </div>
-                <div>
-                  <Label>গল্প প্যারাগ্রাফ ১</Label>
-                  <Textarea
-                    value={formData.about_story_description1}
-                    onChange={(e) => handleChange("about_story_description1", e.target.value)}
-                    rows={3}
-                  />
-                </div>
-                <div>
-                  <Label>গল্প প্যারাগ্রাফ ২</Label>
-                  <Textarea
-                    value={formData.about_story_description2}
-                    onChange={(e) => handleChange("about_story_description2", e.target.value)}
-                    rows={3}
-                  />
+                
+                <div className="pt-4 border-t">
+                  <h4 className="font-medium mb-4">আমাদের গল্প</h4>
+                  <div className="space-y-4">
+                    <div>
+                      <Label>গল্পের টাইটেল</Label>
+                      <Input
+                        value={formData.about_story_title}
+                        onChange={(e) => handleChange("about_story_title", e.target.value)}
+                        placeholder="২০১৯ থেকে আমরা স্বপ্ন বাস্তবায়ন করছি"
+                      />
+                    </div>
+                    <div>
+                      <Label>গল্প প্যারাগ্রাফ ১</Label>
+                      <Textarea
+                        value={formData.about_story_description1}
+                        onChange={(e) => handleChange("about_story_description1", e.target.value)}
+                        rows={3}
+                      />
+                    </div>
+                    <div>
+                      <Label>গল্প প্যারাগ্রাফ ২</Label>
+                      <Textarea
+                        value={formData.about_story_description2}
+                        onChange={(e) => handleChange("about_story_description2", e.target.value)}
+                        rows={3}
+                      />
+                    </div>
+                    <div>
+                      <Label>আমাদের ছবি</Label>
+                      <ImageUpload
+                        value={formData.about_image_url}
+                        onChange={(url) => handleChange("about_image_url", url)}
+                        onRemove={() => handleChange("about_image_url", "")}
+                        folder="about"
+                      />
+                    </div>
+                  </div>
                 </div>
               </CardContent>
             </Card>

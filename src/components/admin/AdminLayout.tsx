@@ -23,7 +23,8 @@ const menuItems = [
   { icon: LayoutDashboard, label: 'ড্যাশবোর্ড', path: '/admin/dashboard' },
   { icon: FolderKanban, label: 'প্রজেক্টস', path: '/admin/projects' },
   { icon: Users, label: 'টিম মেম্বার', path: '/admin/team' },
-  { icon: Settings, label: 'সেটিংস', path: '/admin/settings' },
+  { icon: Briefcase, label: 'সার্ভিস', path: '/admin/services' },
+  { icon: Settings, label: 'সাইট সেটিংস', path: '/admin/settings' },
 ];
 
 const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {

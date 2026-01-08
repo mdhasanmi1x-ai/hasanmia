@@ -15,6 +15,8 @@ import AdminLogin from "./pages/admin/Login";
 import Dashboard from "./pages/admin/Dashboard";
 import ProjectsManagement from "./pages/admin/ProjectsManagement";
 import TeamManagement from "./pages/admin/TeamManagement";
+import ServicesManagement from "./pages/admin/ServicesManagement";
+import SiteSettingsManagement from "./pages/admin/SiteSettingsManagement";
 import Settings from "./pages/admin/Settings";
 import ProtectedRoute from "./components/admin/ProtectedRoute";
 
@@ -38,6 +40,8 @@ const App = () => (
             <Route path="/admin/dashboard" element={<ProtectedRoute requireAdmin><Dashboard /></ProtectedRoute>} />
             <Route path="/admin/projects" element={<ProtectedRoute requireAdmin><ProjectsManagement /></ProtectedRoute>} />
             <Route path="/admin/team" element={<ProtectedRoute requireAdmin><TeamManagement /></ProtectedRoute>} />
+            <Route path="/admin/services" element={<ProtectedRoute requireAdmin><ServicesManagement /></ProtectedRoute>} />
+            <Route path="/admin/site-settings" element={<ProtectedRoute requireAdmin><SiteSettingsManagement /></ProtectedRoute>} />
             <Route path="/admin/settings" element={<ProtectedRoute requireAdmin><Settings /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>

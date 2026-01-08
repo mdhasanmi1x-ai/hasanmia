@@ -1,8 +1,17 @@
 import { Link } from "react-router-dom";
 import { Facebook, Twitter, Linkedin, Instagram, Mail, Phone, MapPin } from "lucide-react";
+import { useSiteSettings } from "@/hooks/useSiteSettings";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
+  const { data: settings } = useSiteSettings();
+
+  const siteName = (settings?.site_name as string) || "ফ্রিল্যান্সহাব";
+  const logoText = (settings?.site_logo_text as string) || "ফ";
+  const copyright = (settings?.footer_copyright as string) || "ফ্রিল্যান্সহাব। সর্বস্বত্ব সংরক্ষিত।";
+  const address = (settings?.contact_address as string) || "ঢাকা, বাংলাদেশ";
+  const phone = (settings?.contact_phone as string) || "+৮৮০ ১৭XX-XXXXXX";
+  const email = (settings?.contact_email as string) || "contact@freelancehub.com";
 
   return (
     <footer className="bg-primary text-primary-foreground">
@@ -12,28 +21,56 @@ const Footer = () => {
           <div className="space-y-4">
             <div className="flex items-center gap-2">
               <div className="w-10 h-10 gold-gradient rounded-lg flex items-center justify-center">
-                <span className="text-secondary-foreground font-bold text-xl">ফ</span>
+                <span className="text-secondary-foreground font-bold text-xl">{logoText}</span>
               </div>
               <span className="text-xl font-bold">
-                ফ্রিল্যান্স<span className="text-secondary">হাব</span>
+                {siteName.includes("হাব") ? (
+                  <>
+                    {siteName.split("হাব")[0]}<span className="text-secondary">হাব</span>
+                  </>
+                ) : siteName}
               </span>
             </div>
             <p className="text-primary-foreground/80 text-sm leading-relaxed">
               আমরা উচ্চমানের ওয়েব ডেভেলপমেন্ট, গ্রাফিক ডিজাইন এবং ডিজিটাল মার্কেটিং সেবা প্রদান করি।
             </p>
             <div className="flex gap-4">
-              <a href="#" className="w-9 h-9 rounded-full bg-primary-foreground/10 flex items-center justify-center hover:bg-secondary hover:text-secondary-foreground transition-colors">
-                <Facebook size={18} />
-              </a>
-              <a href="#" className="w-9 h-9 rounded-full bg-primary-foreground/10 flex items-center justify-center hover:bg-secondary hover:text-secondary-foreground transition-colors">
-                <Twitter size={18} />
-              </a>
-              <a href="#" className="w-9 h-9 rounded-full bg-primary-foreground/10 flex items-center justify-center hover:bg-secondary hover:text-secondary-foreground transition-colors">
-                <Linkedin size={18} />
-              </a>
-              <a href="#" className="w-9 h-9 rounded-full bg-primary-foreground/10 flex items-center justify-center hover:bg-secondary hover:text-secondary-foreground transition-colors">
-                <Instagram size={18} />
-              </a>
+              {settings?.contact_facebook && (
+                <a href={settings.contact_facebook as string} target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-full bg-primary-foreground/10 flex items-center justify-center hover:bg-secondary hover:text-secondary-foreground transition-colors">
+                  <Facebook size={18} />
+                </a>
+              )}
+              {settings?.contact_twitter && (
+                <a href={settings.contact_twitter as string} target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-full bg-primary-foreground/10 flex items-center justify-center hover:bg-secondary hover:text-secondary-foreground transition-colors">
+                  <Twitter size={18} />
+                </a>
+              )}
+              {settings?.contact_linkedin && (
+                <a href={settings.contact_linkedin as string} target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-full bg-primary-foreground/10 flex items-center justify-center hover:bg-secondary hover:text-secondary-foreground transition-colors">
+                  <Linkedin size={18} />
+                </a>
+              )}
+              {settings?.contact_instagram && (
+                <a href={settings.contact_instagram as string} target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-full bg-primary-foreground/10 flex items-center justify-center hover:bg-secondary hover:text-secondary-foreground transition-colors">
+                  <Instagram size={18} />
+                </a>
+              )}
+              {!settings?.contact_facebook && !settings?.contact_twitter && !settings?.contact_linkedin && !settings?.contact_instagram && (
+                <>
+                  <a href="#" className="w-9 h-9 rounded-full bg-primary-foreground/10 flex items-center justify-center hover:bg-secondary hover:text-secondary-foreground transition-colors">
+                    <Facebook size={18} />
+                  </a>
+                  <a href="#" className="w-9 h-9 rounded-full bg-primary-foreground/10 flex items-center justify-center hover:bg-secondary hover:text-secondary-foreground transition-colors">
+                    <Twitter size={18} />
+                  </a>
+                  <a href="#" className="w-9 h-9 rounded-full bg-primary-foreground/10 flex items-center justify-center hover:bg-secondary hover:text-secondary-foreground transition-colors">
+                    <Linkedin size={18} />
+                  </a>
+                  <a href="#" className="w-9 h-9 rounded-full bg-primary-foreground/10 flex items-center justify-center hover:bg-secondary hover:text-secondary-foreground transition-colors">
+                    <Instagram size={18} />
+                  </a>
+                </>
+              )}
             </div>
           </div>
 
@@ -67,15 +104,15 @@ const Footer = () => {
             <ul className="space-y-4">
               <li className="flex items-start gap-3">
                 <MapPin size={20} className="text-secondary mt-0.5" />
-                <span className="text-primary-foreground/80">ঢাকা, বাংলাদেশ</span>
+                <span className="text-primary-foreground/80">{address}</span>
               </li>
               <li className="flex items-center gap-3">
                 <Phone size={20} className="text-secondary" />
-                <span className="text-primary-foreground/80">+৮৮০ ১৭XX-XXXXXX</span>
+                <span className="text-primary-foreground/80">{phone}</span>
               </li>
               <li className="flex items-center gap-3">
                 <Mail size={20} className="text-secondary" />
-                <span className="text-primary-foreground/80">contact@freelancehub.com</span>
+                <span className="text-primary-foreground/80">{email}</span>
               </li>
             </ul>
           </div>
@@ -87,7 +124,7 @@ const Footer = () => {
         <div className="container-custom py-6">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-primary-foreground/70 text-sm">
-              © {currentYear} ফ্রিল্যান্সহাব। সর্বস্বত্ব সংরক্ষিত।
+              © {currentYear} {copyright}
             </p>
             <div className="flex gap-6 text-sm">
               <a href="#" className="text-primary-foreground/70 hover:text-secondary transition-colors">প্রাইভেসি পলিসি</a>

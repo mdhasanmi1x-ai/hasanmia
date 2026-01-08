@@ -2,67 +2,24 @@ import { useState } from "react";
 import { ExternalLink, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { useProjects } from "@/hooks/useProjects";
 
-const categories = ["সব", "ওয়েব ডিজাইন", "মোবাইল অ্যাপ", "ব্র্যান্ডিং", "UI/UX"];
-
-const projects = [
-  {
-    id: 1,
-    title: "ই-কমার্স প্ল্যাটফর্ম",
-    category: "ওয়েব ডিজাইন",
-    image: "https://images.unsplash.com/photo-1661956602116-aa6865609028?w=600&h=400&fit=crop",
-    client: "ফ্যাশন স্টোর",
-    teamMember: "আহমেদ হাসান",
-  },
-  {
-    id: 2,
-    title: "ফুড ডেলিভারি অ্যাপ",
-    category: "মোবাইল অ্যাপ",
-    image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=600&h=400&fit=crop",
-    client: "খাবারঘর",
-    teamMember: "ফাতেমা আক্তার",
-  },
-  {
-    id: 3,
-    title: "কর্পোরেট ব্র্যান্ডিং",
-    category: "ব্র্যান্ডিং",
-    image: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=600&h=400&fit=crop",
-    client: "টেক সলিউশন্স",
-    teamMember: "করিম উদ্দিন",
-  },
-  {
-    id: 4,
-    title: "হেলথকেয়ার ড্যাশবোর্ড",
-    category: "UI/UX",
-    image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=600&h=400&fit=crop",
-    client: "মেডিকেয়ার",
-    teamMember: "সাবরিনা ইসলাম",
-  },
-  {
-    id: 5,
-    title: "রিয়েল এস্টেট ওয়েবসাইট",
-    category: "ওয়েব ডিজাইন",
-    image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=600&h=400&fit=crop",
-    client: "হোমফাইন্ডার",
-    teamMember: "আহমেদ হাসান",
-  },
-  {
-    id: 6,
-    title: "ফিটনেস ট্র্যাকার",
-    category: "মোবাইল অ্যাপ",
-    image: "https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=600&h=400&fit=crop",
-    client: "ফিটজোন",
-    teamMember: "করিম উদ্দিন",
-  },
-];
+const defaultCategories = ["সব", "ওয়েব ডিজাইন", "মোবাইল অ্যাপ", "ব্র্যান্ডিং", "UI/UX"];
 
 const ProjectsSection = () => {
+  const { data: projects } = useProjects();
   const [activeCategory, setActiveCategory] = useState("সব");
 
-  const filteredProjects =
-    activeCategory === "সব"
+  // Get unique categories from projects
+  const categories = projects && projects.length > 0
+    ? ["সব", ...new Set(projects.map(p => p.category))]
+    : defaultCategories;
+
+  const filteredProjects = projects
+    ? activeCategory === "সব"
       ? projects
-      : projects.filter((p) => p.category === activeCategory);
+      : projects.filter((p) => p.category === activeCategory)
+    : [];
 
   return (
     <section className="section-padding bg-muted/30">
@@ -98,45 +55,70 @@ const ProjectsSection = () => {
         </div>
 
         {/* Projects Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredProjects.map((project) => (
-            <div
-              key={project.id}
-              className="group bg-card rounded-2xl overflow-hidden card-elevated"
-            >
-              {/* Image */}
-              <div className="relative h-56 overflow-hidden">
-                <img
-                  src={project.image}
-                  alt={project.title}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-primary/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                  <button className="w-12 h-12 bg-secondary rounded-full flex items-center justify-center transform scale-0 group-hover:scale-100 transition-transform duration-300">
-                    <ExternalLink className="text-secondary-foreground" size={20} />
-                  </button>
+        {filteredProjects.length === 0 ? (
+          <div className="text-center py-12 text-muted-foreground">
+            কোনো প্রজেক্ট পাওয়া যায়নি। অ্যাডমিন প্যানেল থেকে প্রজেক্ট যোগ করুন।
+          </div>
+        ) : (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredProjects.slice(0, 6).map((project) => (
+              <div
+                key={project.id}
+                className="group bg-card rounded-2xl overflow-hidden card-elevated"
+              >
+                {/* Image */}
+                <div className="relative h-56 overflow-hidden">
+                  <img
+                    src={project.image_url || "https://images.unsplash.com/photo-1661956602116-aa6865609028?w=600&h=400&fit=crop"}
+                    alt={project.title}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-primary/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    {project.project_url && (
+                      <a 
+                        href={project.project_url} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="w-12 h-12 bg-secondary rounded-full flex items-center justify-center transform scale-0 group-hover:scale-100 transition-transform duration-300"
+                      >
+                        <ExternalLink className="text-secondary-foreground" size={20} />
+                      </a>
+                    )}
+                  </div>
+                  <span className="absolute top-4 left-4 bg-secondary text-secondary-foreground text-xs font-medium px-3 py-1 rounded-full">
+                    {project.category}
+                  </span>
                 </div>
-                <span className="absolute top-4 left-4 bg-secondary text-secondary-foreground text-xs font-medium px-3 py-1 rounded-full">
-                  {project.category}
-                </span>
-              </div>
 
-              {/* Content */}
-              <div className="p-6">
-                <h3 className="text-lg font-semibold text-foreground mb-2 group-hover:text-primary transition-colors">
-                  {project.title}
-                </h3>
-                <p className="text-muted-foreground text-sm mb-3">
-                  ক্লায়েন্ট: {project.client}
-                </p>
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <div className="w-6 h-6 hero-gradient rounded-full" />
-                  <span>{project.teamMember}</span>
+                {/* Content */}
+                <div className="p-6">
+                  <h3 className="text-lg font-semibold text-foreground mb-2 group-hover:text-primary transition-colors">
+                    {project.title}
+                  </h3>
+                  {project.client_name && (
+                    <p className="text-muted-foreground text-sm mb-3">
+                      ক্লায়েন্ট: {project.client_name}
+                    </p>
+                  )}
+                  {project.project_team_members && project.project_team_members.length > 0 && (
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      {project.project_team_members[0].team_members?.image_url ? (
+                        <img 
+                          src={project.project_team_members[0].team_members.image_url} 
+                          alt={project.project_team_members[0].team_members.name}
+                          className="w-6 h-6 rounded-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-6 h-6 hero-gradient rounded-full" />
+                      )}
+                      <span>{project.project_team_members[0].team_members?.name}</span>
+                    </div>
+                  )}
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
 
         {/* View All Button */}
         <div className="text-center mt-12">

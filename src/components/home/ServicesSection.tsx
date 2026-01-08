@@ -13,49 +13,28 @@ const iconMap: Record<string, LucideIcon> = {
   Shield,
 };
 
-const defaultServices = [
-  {
-    id: "1",
-    icon: "Code",
-    title: "ওয়েব ডেভেলপমেন্ট",
-    description: "আধুনিক এবং রেসপন্সিভ ওয়েবসাইট তৈরি করি যা আপনার ব্যবসাকে অনলাইনে সফল করবে।",
-  },
-  {
-    id: "2",
-    icon: "Palette",
-    title: "UI/UX ডিজাইন",
-    description: "ব্যবহারকারী-বান্ধব এবং আকর্ষণীয় ইন্টারফেস ডিজাইন যা আপনার গ্রাহকদের মুগ্ধ করবে।",
-  },
-  {
-    id: "3",
-    icon: "Smartphone",
-    title: "মোবাইল অ্যাপ",
-    description: "iOS এবং Android প্ল্যাটফর্মের জন্য উচ্চমানের মোবাইল অ্যাপ্লিকেশন ডেভেলপমেন্ট।",
-  },
-  {
-    id: "4",
-    icon: "Search",
-    title: "SEO অপ্টিমাইজেশন",
-    description: "সার্চ ইঞ্জিনে আপনার ওয়েবসাইটের র‍্যাংকিং বাড়ান এবং বেশি ভিজিটর পান।",
-  },
-  {
-    id: "5",
-    icon: "Megaphone",
-    title: "ডিজিটাল মার্কেটিং",
-    description: "সোশ্যাল মিডিয়া, PPC এবং কন্টেন্ট মার্কেটিং-এ পূর্ণাঙ্গ সেবা।",
-  },
-  {
-    id: "6",
-    icon: "TrendingUp",
-    title: "ব্র্যান্ডিং",
-    description: "আপনার ব্র্যান্ডের জন্য লোগো, বিজনেস কার্ড এবং সম্পূর্ণ ব্র্যান্ড আইডেন্টিটি।",
-  },
-];
-
 const ServicesSection = () => {
   const { data: services } = useServices();
-  
-  const displayServices = services && services.length > 0 ? services : defaultServices;
+
+  if (!services || services.length === 0) {
+    return (
+      <section className="section-padding bg-background">
+        <div className="container-custom">
+          <div className="text-center max-w-2xl mx-auto mb-16">
+            <span className="inline-block text-secondary font-semibold text-sm uppercase tracking-wider mb-4">
+              আমাদের সার্ভিস
+            </span>
+            <h2 className="heading-primary mb-6">
+              আপনার <span className="gold-text">ব্যবসার</span> জন্য সেরা সমাধান
+            </h2>
+          </div>
+          <div className="text-center py-12 text-muted-foreground">
+            কোনো সার্ভিস পাওয়া যায়নি। অ্যাডমিন প্যানেল থেকে সার্ভিস যোগ করুন।
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="section-padding bg-background">
@@ -75,7 +54,7 @@ const ServicesSection = () => {
 
         {/* Services Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {displayServices.slice(0, 6).map((service) => {
+          {services.slice(0, 6).map((service) => {
             const IconComponent = iconMap[service.icon || "Code"] || Code;
             return (
               <div
